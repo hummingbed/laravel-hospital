@@ -3,9 +3,30 @@
 <div class="page-section">
     <div class="container">
         <h1 class="text-center wow fadeInUp">Make an Appointment</h1>
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ session('success') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
 
         <form class="main-form" action="{{url('appointment')}}" method="post">
             @csrf
+            @if ($errors->any())
+                <ul>
+                    @foreach ($errors->all() as $error)
+
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ $error }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endforeach
+                </ul>
+            @endif
             <div class="row mt-5 ">
                 <div class="col-12 col-sm-6 py-2 wow fadeInLeft">
                     <input type="text" name="user_id" class="form-control" value="{{ auth()->user()->name }}" readonly>

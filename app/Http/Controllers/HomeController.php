@@ -3,13 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AppointmentRequest;
-use App\Models\Appiontment;
+use App\Models\Appointment;
 use App\Models\Doctor;
+use App\Models\User;
+use Illuminate\Database\QueryException;
+//use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 
 class HomeController extends Controller
 {
+
+    protected $appointment;
+
+    public function __construct(Appointment $appointment)
+    {
+        $this->appointment = $appointment;
+    }
     public function index()
     {
         $doctors = Doctor::all();
@@ -18,12 +29,12 @@ class HomeController extends Controller
 
     public function appointment(AppointmentRequest $request)
     {
-        $appointment = new Appiontment;
-        $appointment->user_id = $request->user_id;
-        $appointment->doctor_id = $request->doctor;
-        $appointment->date = $request->date;
-        $appointment->message = $request->message;
-        $appointment->save();
+        try {
+            $this->appointment->createAppointment($request);
+            return redirect()->back()->with('success', 'Data saved successfully!');
+        } catch (QueryException $e) {
+            return redirect()->back()->with('errors', 'Failed to save data. Please try again.');
+        }
     }
 
     public function redirect()

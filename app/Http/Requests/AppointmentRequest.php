@@ -11,7 +11,7 @@ class AppointmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class AppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => 'required',
+            'doctor' => 'required|integer|exists:doctors,id',
+            'date' => 'required|date',
+            'message' => 'nullable|string|max:255',
         ];
     }
 }

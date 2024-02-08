@@ -36,4 +36,9 @@ class Doctor extends Model
         $doctor->room = $request->room;
         $doctor->save();
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }

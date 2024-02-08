@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Doctor;
-use App\Models\User;
 use Illuminate\Database\QueryException;
-//use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 
 
 class HomeController extends Controller
@@ -35,6 +32,25 @@ class HomeController extends Controller
         } catch (QueryException $e) {
             return redirect()->back()->with('errors', 'Failed to save data. Please try again.');
         }
+    }
+
+    public function myAppointment()
+    {
+//        var_dump(Auth::id());
+        $appointments = Appointment::where(['user_id' => Auth::id()])->with('doctor')->get();
+        if(Auth::id()){
+            return view('user.my_appointment', compact('appointments'));
+        }else{
+            return redirect()->back();
+        }
+
+    }
+
+    public function cancelAppointment($id)
+    {
+        $canceledAppointment = Appointment::find($id);
+        $canceledAppointment->delete();
+        return redirect()->back();
     }
 
     public function redirect()

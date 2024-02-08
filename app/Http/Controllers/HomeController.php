@@ -50,7 +50,8 @@ class HomeController extends Controller
     {
         $canceledAppointment = Appointment::find($id);
         $canceledAppointment->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Appointment canceled successfully.');
+
     }
 
     public function redirect()

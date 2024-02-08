@@ -102,6 +102,14 @@
         </div> <!-- .container -->
     </nav>
 </header>
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ session('success') }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
 <div class="container p-4">
     <table class="table table-striped">
@@ -116,44 +124,50 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($appointments as $appointment)
-        <tr>
-            <td>{{$appointment->doctor->name}}</td>
-            <td>{{$appointment->doctor->speciality}}</td>
-            <td>{{$appointment->message}}</td>
-            <td style="color: {{$appointment->status === 'in_progress' ? 'orange' : 'green'}}">{{$appointment->status}}</td>
-            <td>{{$appointment->date}}</td>
+        @if(count($appointments) == 0)
+            <tr>
+                <td colspan="6" class="text-center">No appointments</td>
+            </tr>
+        @else
+            @foreach($appointments as $appointment)
+                <tr>
+                    <td>{{$appointment->doctor->name}}</td>
+                    <td>{{$appointment->doctor->speciality}}</td>
+                    <td>{{$appointment->message}}</td>
+                    <td style="color: {{$appointment->status === 'in_progress' ? 'orange' : 'green'}}">{{$appointment->status}}</td>
+                    <td>{{$appointment->date}}</td>
 
-            <td>
-                @if($appointment->status == 'in_progress')
-                    <form method="POST" action="{{ route('appointments.cancel', $appointment->id) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="bg-danger px-2 py-1 rounded">Cancel</button>
-                    </form>
-                @else
-                    <button type="button" class="bg-danger px-2 py-1 rounded" data-toggle="modal" data-target="#cancelModal">Cancel</button>
+                    <td>
+                        @if($appointment->status == 'in_progress')
+                            <form method="POST" action="{{ route('appointments.cancel', $appointment->id) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-danger px-2 py-1 rounded">Cancel</button>
+                            </form>
+                        @else
+                            <button type="button" class="bg-danger px-2 py-1 rounded" data-toggle="modal" data-target="#cancelModal">Cancel</button>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="cancelModalLabel">Cannot Cancel Appointment</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    This appointment has already been marked as done and cannot be canceled.
+                            <!-- Modal -->
+                            <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="cancelModalLabel">Cannot Cancel Appointment</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            This appointment has already been marked as done and cannot be canceled.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                @endif
-            </td>
-        </tr>
-        @endforeach
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        @endif
         </tbody>
     </table>
 </div>

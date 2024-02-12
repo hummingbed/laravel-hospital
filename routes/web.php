@@ -22,7 +22,9 @@ Route::get('/home',[HomeController::class, 'redirect']);
 Route::post('/upload-doctor',[AdminController::class, 'saveDoctor']);
 Route::post('/appointment',[HomeController::class, 'appointment']);
 Route::get('/my-appointment',[HomeController::class, 'myAppointment']);
-//Route::delete('/cancel-appointment/{id}',[HomeController::class, 'cancelAppointment']);
+Route::get('/show-appointment',[AdminController::class, 'showAppointment']);
+Route::post('/approve-appointment/{appointmentId}',[AdminController::class, 'approveRequest']);
+Route::post('/cancel-appointment/{appointmentId}',[AdminController::class, 'cancelRequest']);
 Route::delete('/cancel-appointment/{appointment}', [HomeController::class, 'cancelAppointment'])->name('appointments.cancel');
 
 

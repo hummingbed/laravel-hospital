@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SaveDoctorRequest;
+use App\Models\Appointment;
 use App\Models\Doctor;
 use Illuminate\Database\QueryException;
 
@@ -30,5 +31,24 @@ class AdminController extends Controller
             // If an exception occurs, redirect back with an error message
             return redirect()->back()->with('errors', 'Failed to save data. Please try again.');
         }
+    }
+
+    public function showAppointment()
+    {
+        $appointments = Appointment::all();
+        return view('admin.show_appointment', compact('appointments'));
+    }
+
+    public function approveRequest($id)
+    {
+        $appointments = Appointment::where(['id' => $id]);
+        $appointments->update(['status' => 'approved']);
+        return redirect()->back();
+    }
+    public function cancelRequest($id)
+    {
+        $appointments = Appointment::where(['id' => $id]);
+        $appointments->update(['status' => 'cancel']);
+        return redirect()->back();
     }
 }
